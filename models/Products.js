@@ -12,7 +12,7 @@ const ProductSchema = mongoose.Schema({
     required: true,
     trim: true,
   },
-  qtyInventary: {
+  qtyInventory: {
     type: Number,
     required: true
   },

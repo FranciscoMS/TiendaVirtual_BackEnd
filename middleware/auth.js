@@ -7,11 +7,10 @@ module.exports = (req, res, next) => {
   
   //Check for token
   if (!token) {
-    res.status(401).json({ msg: 'Permiss not valid, no token exists' });
+    return res.status(401).json({ msg: 'Permiss not valid, no token exists' });
   }
 
   //Validate token
-
   try {
     const validate = jwt.verify(token, process.env.TOPSECRET);
     req.user = validate.user;

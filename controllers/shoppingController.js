@@ -26,21 +26,23 @@ exports.addProduct = async (req, res) => {
 
     shopping.owner = req.user.id;
 
-    // add the product to shopping car
+    // add the product to shopping cart
     await shopping.save();
 
-    res.status(200).json({ msg: "Product added to shopping car" });
+    const resShopping = await Shopping.findById(shopping._id).populate('product').exec();
+
+    res.status(200).json({ resShopping });
   } catch (error) {
     console.log(error);
     res.status(500).send('Exist error');
   }
 }
 
-//Get all products from shopping car
+//Get all products from shopping cart
 exports.getProducts = async (req, res) => {
   try {
-    const shoppingCar = await Shopping.find({ owner: req.user.id}).populate('product').exec();
-    res.status(200).json({ shoppingCar });
+    const shoppingCart = await Shopping.find({ owner: req.user.id}).populate('product').exec();
+    res.status(200).json({ shoppingCart });
 
   } catch (error) {
     console.log(error);
@@ -48,7 +50,7 @@ exports.getProducts = async (req, res) => {
   }
 }
 
-//Update qty from shopping car
+//Update qty from shopping cart
 exports.updateShopping = async (req, res) => {
   //check for error in data
   const errors = validationResult(req);
@@ -87,12 +89,12 @@ exports.updateShopping = async (req, res) => {
     
   } catch (error) {
     console.log(error);
-    res.status(500).send('Exist error');
+    res.status(500).json({ msg: 'Exist error'});
   }
 }
 
 
-//Delete a product from shopping car
+//Delete a product from shopping cart
 exports.deleteProducto = async (req, res) => {
   try {
     //check id
@@ -111,7 +113,7 @@ exports.deleteProducto = async (req, res) => {
     //delete shopping
     await Shopping.findOneAndRemove({ _id: req.params.id });
 
-    res.status(200).json({ smg: 'Product deleted from shopping car'});
+    res.status(200).json({ smg: 'Product deleted from shopping cart'});
     
   } catch (error) {
     console.log(error);

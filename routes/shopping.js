@@ -25,7 +25,7 @@ router.get('/',
   shoppingController.getProducts
 );
 
-//Update shopping car
+//Update shopping cart
 router.put('/:id',
   auth,
   [
@@ -34,7 +34,7 @@ router.put('/:id',
   shoppingController.updateShopping
 );
 
-//Delete product from shopping car
+//Delete product from shopping cart
 router.delete('/:id',
   auth,
   shoppingController.deleteProducto
