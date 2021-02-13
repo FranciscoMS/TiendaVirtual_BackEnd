@@ -35,6 +35,7 @@ exports.authUser = async (req, res) => {
       },
     };
 
+    //create authentication token using JWT and send that token on the response
     jwt.sign(
       payload,
       process.env.TOPSECRET,

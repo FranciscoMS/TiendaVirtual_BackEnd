@@ -27,6 +27,7 @@ exports.addProduct = async (req, res) => {
     // add the product to shopping cart
     await shopping.save();
 
+    // get the product info associate to the shopping cart
     const resShopping = await Shopping.findById(shopping._id)
       .populate("product")
       .exec();
@@ -76,16 +77,20 @@ exports.updateShopping = async (req, res) => {
       res.status(404).json({ msg: `Shopping don't exist` });
     }
 
+    //Validate if have permission to update the shopping cart
     if (shopping.owner.toString() !== req.user.id) {
       res.status(401).json({ msg: "Not Authorized" });
     }
 
+    //Update the shopping cart
     shopping = await Shopping.findOneAndUpdate(
       { _id: req.params.id },
       { $set: newShopping },
       { new: true }
     );
 
+
+    //Get the producct information associate to the shopping cart
     const resShopping = await Shopping.findById(shopping._id)
       .populate("product")
       .exec();
