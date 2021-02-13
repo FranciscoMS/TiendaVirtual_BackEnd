@@ -1,9 +1,8 @@
-const Shopping = require('../models/Shopping');
-const Product = require('../models/Products');
+const Shopping = require("../models/Shopping");
+const Product = require("../models/Products");
 const { validationResult } = require("express-validator");
 
 exports.addProduct = async (req, res) => {
-
   //check for error in data
   const errors = validationResult(req);
 
@@ -14,7 +13,6 @@ exports.addProduct = async (req, res) => {
   const { refProduct } = req.body;
 
   try {
-
     const product = Product.findById(refProduct);
 
     if (!product) {
@@ -29,26 +27,29 @@ exports.addProduct = async (req, res) => {
     // add the product to shopping cart
     await shopping.save();
 
-    const resShopping = await Shopping.findById(shopping._id).populate('product').exec();
+    const resShopping = await Shopping.findById(shopping._id)
+      .populate("product")
+      .exec();
 
     res.status(200).json({ resShopping });
   } catch (error) {
     console.log(error);
-    res.status(500).send('Exist error');
+    res.status(500).send("Exist error");
   }
-}
+};
 
 //Get all products from shopping cart
 exports.getProducts = async (req, res) => {
   try {
-    const shoppingCart = await Shopping.find({ owner: req.user.id}).populate('product').exec();
+    const shoppingCart = await Shopping.find({ owner: req.user.id })
+      .populate("product")
+      .exec();
     res.status(200).json({ shoppingCart });
-
   } catch (error) {
     console.log(error);
-    res.status(500).send('Exist error');
+    res.status(500).send("Exist error");
   }
-}
+};
 
 //Update qty from shopping cart
 exports.updateShopping = async (req, res) => {
@@ -63,7 +64,7 @@ exports.updateShopping = async (req, res) => {
 
   const newShopping = {};
 
-  if(qty) {
+  if (qty) {
     newShopping.qty = qty;
   }
 
@@ -71,12 +72,12 @@ exports.updateShopping = async (req, res) => {
     //check id
     let shopping = await Shopping.findById(req.params.id);
 
-    if(!shopping) {
-      res.status(404).json({ msg: `Shopping don't exist`});
+    if (!shopping) {
+      res.status(404).json({ msg: `Shopping don't exist` });
     }
 
     if (shopping.owner.toString() !== req.user.id) {
-      res.status(401).json({ msg: 'Not Authorized'});
+      res.status(401).json({ msg: "Not Authorized" });
     }
 
     shopping = await Shopping.findOneAndUpdate(
@@ -85,14 +86,16 @@ exports.updateShopping = async (req, res) => {
       { new: true }
     );
 
-    res.status(200).json(shopping);
-    
+    const resShopping = await Shopping.findById(shopping._id)
+      .populate("product")
+      .exec();
+
+    res.status(200).json({ resShopping });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ msg: 'Exist error'});
+    res.status(500).json({ msg: "Exist error" });
   }
-}
-
+};
 
 //Delete a product from shopping cart
 exports.deleteProducto = async (req, res) => {
@@ -101,22 +104,21 @@ exports.deleteProducto = async (req, res) => {
     let shopping = await Shopping.findById(req.params.id);
 
     //check if the shipping exist
-    if(!shopping) {
-      res.status(404).json({ msg: `Shopping don't exist`});
+    if (!shopping) {
+      res.status(404).json({ msg: `Shopping don't exist` });
     }
 
     //Check owner of shopping
     if (shopping.owner.toString() !== req.user.id) {
-      res.status(401).json({ msg: 'Not Authorized'});
+      res.status(401).json({ msg: "Not Authorized" });
     }
 
     //delete shopping
     await Shopping.findOneAndRemove({ _id: req.params.id });
 
-    res.status(200).json({ smg: 'Product deleted from shopping cart'});
-    
+    res.status(200).json({ smg: "Product deleted from shopping cart" });
   } catch (error) {
     console.log(error);
-    res.status(500).send('Exist error'); 
+    res.status(500).send("Exist error");
   }
-}
+};

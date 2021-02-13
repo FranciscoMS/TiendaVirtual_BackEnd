@@ -1,26 +1,26 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ShoppingSchema = mongoose.Schema({
   qty: {
     type: Number,
-    required: true
+    required: true,
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Users'
+    ref: "Users",
   },
   product: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Products'
+    ref: "Products",
   },
   size: {
     type: String,
-    required: true
+    required: true,
   },
   color: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
-module.exports = mongoose.model('Shopping', ShoppingSchema);
+module.exports = mongoose.model("Shopping", ShoppingSchema);
